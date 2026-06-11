@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid Mathematics Assessment (RMA) - Grades 7 to 10</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for symbols/icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md shadow-blue-200">
+                    <i class="fa-solid fa-calculator text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-slate-900 tracking-tight leading-none text-base sm:text-lg">Rapid Mathematics Assessment</h1>
+                    <span class="text-xs text-slate-500 font-semibold tracking-wider uppercase">Grades 7 to 10 &bull; DepEd National Initiative</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div id="timer-container" class="hidden flex items-center gap-2 bg-amber-50 border border-amber-200 px-4 py-2 rounded-xl text-amber-800 font-bold text-sm">
+                    <i class="fa-regular fa-clock animate-pulse"></i>
+                    <span id="timer-display">90:00</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="btn-toggle-instructions" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-info"></i> Formulas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left Column (75% / col-span-9) -->
+        <section id="main-display-container" class="lg:col-span-9 space-y-6">
+            
+            <!-- 1. INTRO / START SCREEN (Cover Page & Instructions) -->
+            <div id="screen-welcome" class="max-w-2xl mx-auto bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6 mt-4">
+                <div class="text-center space-y-2">
+                    <div class="inline-block bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">Diagnostic Assessment</div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">Welcome to the Rapid Mathematics Assessment</h2>
+                    <p class="text-sm text-slate-500">Department of Education Mathematics Readiness Assessment Portal.</p>
+                </div>
+
+                <!-- Callout Box for Specific Instructions -->
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-6 rounded-2xl space-y-4">
+                    <h4 class="font-extrabold text-blue-900 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-blue-600"></i> Important Instructions for Learners:
+                    </h4>
+                    <ol class="text-xs text-slate-700 space-y-3 list-decimal pl-4 leading-relaxed font-semibold">
+                        <li>Your score in this test will not affect your grade in mathematics, however, do your best to answer each item.</li>
+                        <li>All items will require you to write the answer. Use the answer sheet provided.</li>
+                        <li>The assessment is timed. You have to do it within the allotted time.</li>
+                        <li>If you finish ahead of time, you may review your answers.</li>
+                        <li>No test questionnaires will be collected before the allocated time. Maximize the allotted time to review your answers.</li>
+                    </ol>
+                </div>
+
+                <div class="pt-2">
+                    <button id="btn-proceed-to-reg" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg shadow-blue-100 transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                        <span>Proceed to Registration</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. REGISTRATION SCREEN -->
+            <div id="screen-registration" class="hidden max-w-2xl mx-auto bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6 mt-4">
+                <div class="text-center space-y-2">
+                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Candidate Registration</h3>
+                    <p class="text-xs text-slate-400">Provide your details to unlock and activate the assessment.</p>
+                </div>
+
+                <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                    <h4 class="font-bold text-slate-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-user-graduate text-blue-600"></i> Student Information</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Full Name</label>
+                            <input id="input-student-name" type="text" placeholder="e.g., Juan dela Cruz" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">LRN (12-Digit Number)</label>
+                            <input id="input-student-lrn" type="text" maxlength="12" placeholder="e.g., 102938475612" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold code-font text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Grade Level</label>
+                            <select id="select-student-grade" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold text-slate-800">
+                                <option value="" disabled selected>Select Grade</option>
+                                <option value="Grade 7">Grade 7</option>
+                                <option value="Grade 8">Grade 8</option>
+                                <option value="Grade 9">Grade 9</option>
+                                <option value="Grade 10">Grade 10</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Section</label>
+                            <input id="input-student-section" type="text" placeholder="e.g., Section A, Mabini" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold text-slate-800">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Sex</label>
+                            <select id="select-student-sex" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold text-slate-800">
+                                <option value="" disabled selected>Select Sex</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button id="btn-back-to-welcome" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold py-3 px-6 rounded-2xl transition-all">
+                        Back
+                    </button>
+                    <button id="btn-start-assessment" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 px-6 rounded-2xl shadow-lg shadow-blue-100 transition-all flex items-center justify-center gap-2">
+                        <span>Begin Assessment</span>
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. ASSESSMENT ENGINE CONTAINER -->
+            <div id="screen-assessment" class="hidden space-y-6">
+                <div class="bg-white border border-slate-200 p-4 sm:p-5 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div>
+                        <span id="active-item-domain" class="text-xs font-bold text-blue-600 tracking-wider uppercase bg-blue-50 px-2.5 py-1 rounded-full">Algebraic Expressions</span>
+                        <h3 id="active-item-number" class="text-xl font-extrabold text-slate-900 mt-2">Question 1 of 47</h3>
+                    </div>
+                    <div class="flex items-center gap-2 self-stretch sm:self-auto">
+                        <button id="btn-prev-q" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs transition-all flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-chevron-left"></i> Back
+                        </button>
+                        <button id="btn-next-q" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition-all flex items-center justify-center gap-1">
+                            Next <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-8 shadow-sm space-y-6">
+                    <div id="question-visual-box" class="w-full bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center p-4 min-h-[140px] overflow-hidden">
+                    </div>
+                    <div class="space-y-3">
+                        <p id="question-text" class="text-base sm:text-lg font-bold text-slate-800 leading-relaxed">
+                            Loading question...
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100">
+                        <div id="answer-inputs-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. THANK YOU SCREEN (Student End State) -->
+            <div id="screen-thank-you" class="hidden max-w-2xl mx-auto bg-white border border-slate-200 rounded-3xl p-10 shadow-xl space-y-6 mt-10 text-center">
+                <div class="mx-auto w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                    <i class="fa-solid fa-check text-5xl"></i>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Assessment Completed</h2>
+                <p class="text-slate-600 text-lg">Thank you, <strong id="ty-student-name" class="text-slate-800"></strong>.</p>
+                <p class="text-slate-500 text-sm max-w-md mx-auto leading-relaxed">Your responses have been securely recorded. You may now safely close this window or tab. Have a great day ahead!</p>
+                
+                <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <button id="btn-view-summary-again" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 rounded-2xl text-xs transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-chart-bar"></i> View Results Summary
+                    </button>
+                    <button id="btn-return-home" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-6 py-3 rounded-2xl text-xs transition-all shadow-md shadow-blue-100 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-house"></i> Return to Home
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Column (25% / col-span-3) - Contains Question Map and Active Candidate Card -->
+        <aside id="test-navigation" class="lg:col-span-3 space-y-4 lg:sticky lg:top-20 hidden">
+            <!-- Student Mini-Card -->
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Candidate</p>
+                <h3 id="sidebar-student-name" class="font-bold text-slate-800 text-base mt-1">Guest Student</h3>
+                <p id="sidebar-student-lrn" class="text-xs text-slate-500 code-font mt-0.5">LRN: ---</p>
+                <p id="sidebar-student-meta" class="text-xs text-slate-500 font-medium">Grade & Section: ---</p>
+                <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-xs font-bold text-slate-600">
+                    <span>Progress:</span>
+                    <span id="sidebar-progress-text">0 / 47 answered</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full mt-2 overflow-hidden">
+                    <div id="sidebar-progress-bar" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Question Numbers Quick Navigator Grid -->
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm">
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Questions Map</h4>
+                <div class="grid grid-cols-5 gap-2 max-h-72 overflow-y-auto pr-1" id="nav-grid">
+                    <!-- Loaded dynamically -->
+                </div>
+                
+                <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-slate-500 font-semibold justify-center">
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-sm"></span> Answered</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 border border-blue-500 bg-blue-50 rounded-sm"></span> Current</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-slate-100 rounded-sm"></span> Unanswered</span>
+                </div>
+            </div>
+
+            <!-- Complete/Submit Test Banner -->
+            <button id="btn-submit-exam" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3 px-4 rounded-2xl shadow-lg shadow-emerald-100 transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                <i class="fa-solid fa-clipboard-check"></i> Submit Assessment
+            </button>
+        </aside>
+
+    </main>
+
+    <!-- Formulas Floating Reference Box (Kept hidden unless explicitly toggled) -->
+    <div class="max-w-2xl mx-auto hidden mt-4 mb-4" id="formulas-box-wrapper">
+        <div id="container-instructions" class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-3xl p-6 shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b border-indigo-500/30 pb-3">
+                <h3 class="font-extrabold text-lg flex items-center gap-2"><i class="fa-solid fa-circle-info text-indigo-400"></i> Handy Reference & Formulas</h3>
+                <button id="btn-close-instructions-main" class="text-indigo-300 hover:text-white transition-all"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div class="bg-indigo-950/50 p-3 rounded-xl border border-indigo-500/20">
+                    <span class="block font-bold text-indigo-400 uppercase tracking-wider text-[9px] mb-1">Triangles</span>
+                    <ul class="space-y-1">
+                        <li>&bull; Perimeter: <span class="code-font">P = a + b + c</span></li>
+                        <li>&bull; Area: <span class="code-font">A = ½ × base × height</span></li>
+                    </ul>
+                </div>
+                <div class="bg-indigo-950/50 p-3 rounded-xl border border-indigo-500/20">
+                    <span class="block font-bold text-indigo-400 uppercase tracking-wider text-[9px] mb-1">Circles & Cylinders</span>
+                    <ul class="space-y-1">
+                        <li>&bull; Circumference: <span class="code-font">C = 2πr</span></li>
+                        <li>&bull; Area of a Circle: <span class="code-font">A = πr²</span></li>
+                        <li>&bull; Volume: <span class="code-font">V = base area × height</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Confirm Dialog Modal -->
+    <div id="modal-container" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-100 transform scale-95 transition-transform duration-300 space-y-4" id="modal-content">
+            <div class="flex items-center gap-3">
+                <div id="modal-icon-container" class="p-3 rounded-2xl bg-blue-50 text-blue-600">
+                    <i class="fa-solid fa-circle-question text-lg" id="modal-icon"></i>
+                </div>
+                <h3 class="font-extrabold text-slate-900 text-lg" id="modal-title">Confirm Action</h3>
+            </div>
+            <p id="modal-text" class="text-sm text-slate-600 leading-relaxed">
+                Are you sure you want to proceed?
+            </p>
+            <div class="flex items-center gap-2 pt-2 justify-end" id="modal-actions">
+                <button id="modal-btn-cancel" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-all">Cancel</button>
+                <button id="modal-btn-confirm" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition-all">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Competency Summary Modal -->
+    <div id="modal-student-results" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100 transform transition-transform space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-emerald-50 text-emerald-600">
+                        <i class="fa-solid fa-clipboard-user text-lg"></i>
+                    </div>
+                    <h3 class="font-extrabold text-slate-900 text-lg">Your Performance Summary</h3>
+                </div>
+                <button id="btn-close-student-results" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <p class="text-xs text-slate-500 leading-relaxed">
+                Here is the summary of your auto-gradable responses grouped by competency according to the Table of Specifications. Written explanations marked as <span class="font-bold text-amber-500">Pending</span> will be reviewed by your teacher.
+            </p>
+
+            <div class="overflow-hidden rounded-xl border border-slate-200">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                            <th class="p-3">Competency Area</th>
+                            <th class="p-3 text-center">Auto-Score</th>
+                            <th class="p-3 text-center text-amber-600">Pending</th>
+                            <th class="p-3 text-center">Max Points</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-results-tbody" class="divide-y divide-slate-100 bg-white">
+                        <!-- Populated by JS -->
+                    </tbody>
+                    <tfoot class="bg-slate-50 border-t border-slate-200 font-bold text-slate-800">
+                        <tr>
+                            <td class="p-3 text-right uppercase text-[10px]">Total:</td>
+                            <td class="p-3 text-center text-blue-600 text-sm" id="student-total-earned">0</td>
+                            <td class="p-3 text-center text-amber-500 text-sm" id="student-total-pending">0</td>
+                            <td class="p-3 text-center text-sm" id="student-total-max">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <button id="btn-done-student-results" class="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-sm transition-all shadow-md shadow-blue-100">
+                Acknowledge & Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Assessment Data & Evaluation Script -->
+    <script>
+        // Array of questions correctly mapped with competency areas and exact maxScores based on official rubric
+        const RMA_QUESTIONS = [
+            { id: 1, competency: "Number Expressions", domain: "Algebraic Expressions", type: "written", question: "Your classmate said that each of the four expressions in Box 1 is equivalent to 1. Verify what your classmate said by showing your computation for the number expression 4 × 4 − 5 × 3.", box: "box1", maxScore: 2 },
+            { id: 2, competency: "Number Expressions", domain: "Algebraic Expressions", type: "text", question: "What must be the next number expression to 5 × 5 − 6 × 4 in Box 1?", box: "box1", correctAnswer: ["6x6-7x5", "6*6-7*5", "6(6)-7(5)"], maxScore: 1 },
+            { id: 3, competency: "Number Expressions", domain: "Algebraic Expressions", type: "mc", question: "Which of the following algebraic expressions represents the set of number expressions in Box 1?", options: [{ value: "a", text: "(n)(n) − (n + 3)(n + 1)" }, { value: "b", text: "(n)(n) − [(n + 1)(n − 1)]" }, { value: "c", text: "(n − 1)(n − 1) − n(n − 2)" }, { value: "d", text: "n² − 3n(1)" }, { value: "e", text: "n² − n − 1" }], correctAnswer: ["b", "c"], multi: true, box: "box1", maxScore: 2 },
+            { id: 4, competency: "Number Expressions", domain: "Algebraic Expressions", type: "written", question: "Explain or show why you think you have chosen the correct algebraic expressions (b or c) for the set of number expressions in Box 1.", box: "box1", maxScore: 2 },
+            { id: 5, competency: "Number Expressions", domain: "Algebraic Expressions", type: "written", question: "What does n represent in your chosen expression in item 3?", box: "box1", maxScore: 1 },
+            { id: 6, competency: "Number Expressions", domain: "Exponents & Powers", type: "written", question: "Show that 1024 is a power of 2. [Refer to Table 1]", table: "table1", maxScore: 1 },
+            { id: 7, competency: "Number Expressions", domain: "Exponents & Powers", type: "text", question: "Write the exponential form of 1024.", correctAnswer: ["2^10"], table: "table1", maxScore: 1 },
+            { id: 8, competency: "Number Expressions", domain: "Exponents & Powers", type: "text", question: "Find a number that is a power of 2 that meets BOTH of these conditions: The number is a multiple of 16, and also more than 50 but less than 200.", correctAnswer: ["64", "128"], table: "table1", maxScore: 1 },
+            { id: 9, competency: "Number Expressions", domain: "Rational Numbers", type: "written", question: "Is there a number between 0.998 and 0.999? If YES, give one example. If NO, explain why you think so.", maxScore: 1 },
+            { id: 10, competency: "Number Expressions", domain: "Rational Numbers", type: "written", question: "Show how you will subtract 0.998 from 0.999.", maxScore: 2 },
+            { id: 11, competency: "Number Expressions", domain: "Rational Numbers", type: "written", question: "Is there a fraction that is greater than 3/4 but less than 1? If YES, give one example. If NO, explain why you think so.", maxScore: 2 },
+            
+            { id: 12, competency: "Data", domain: "Data & Graphs", type: "text", question: "How many students had an overall academic grade below 84? [Refer to Figure 1]", figure: "figure1", correctAnswer: ["5", "five"], maxScore: 1 },
+            { id: 13, competency: "Data", domain: "Data & Graphs", type: "written", question: "Explain why you think your answer in item 12 is correct based on the information shown in the graph in Figure 1.", figure: "figure1", maxScore: 1 },
+            { id: 14, competency: "Data", domain: "Data & Graphs", type: "mc", question: "Which of the following can be a correct interpretation of the data presented in the graph in Figure 1?", options: [{ value: "a", text: "As the number of absences increases, the overall academic grade also increases." }, { value: "b", text: "As the number of absences decreases, the overall academic grade increases." }, { value: "c", text: "As the number of absences increases, the overall academic grade decreases." }, { value: "d", text: "As the number of absences decreases, the overall academic grade also decreases." }], correctAnswer: ["b", "c"], multi: true, figure: "figure1", maxScore: 2 },
+            { id: 15, competency: "Data", domain: "Data & Graphs", type: "written", question: "Based on the graph in Figure 2, which of the two puroks shows more diversity in monthly family income? Explain or justify your answer.", figure: "figure2", maxScore: 2 },
+            { id: 16, competency: "Data", domain: "Data & Graphs", type: "written", question: "The average monthly income of the families in Purok 1 and Purok 2 are equal. Should both puroks be given the same amount of financial aid? What information in the graph in Figure 2 did you base your decision on?", figure: "figure2", maxScore: 2 },
+            { id: 17, competency: "Data", domain: "Probability & Statistics", type: "text", question: "How many students participated in the music activity?", table: "table2", correctAnswer: ["49"], maxScore: 1 },
+            { id: 18, competency: "Data", domain: "Probability & Statistics", type: "text", question: "How many students did not participate in any of the two activities?", table: "table2", correctAnswer: ["19"], maxScore: 1 },
+            { id: 19, competency: "Data", domain: "Probability & Statistics", type: "text", question: "What is the probability of selecting a student who participated in both music and sports activities?", table: "table2", correctAnswer: ["18/110", "9/55", "0.16", "0.163"], maxScore: 1 },
+            { id: 20, competency: "Data", domain: "Probability & Statistics", type: "written", question: "Write a question that can be answered using the information in Table 2.", table: "table2", maxScore: 3 },
+
+            { id: 21, competency: "Coordinates", domain: "Number Line", type: "mc", question: "What is the position of point F in Figure 3?", options: [{ value: "a", text: "Point F is at -500." }, { value: "b", text: "Point F is at -400." }, { value: "c", text: "Point F is at -300." }, { value: "d", text: "Point F is at -200." }, { value: "e", text: "Point F is at 50." }], correctAnswer: ["c"], figure: "figure3", maxScore: 1 },
+            { id: 22, competency: "Coordinates", domain: "Number Line", type: "text", question: "What is the position of point G in Figure 3?", correctAnswer: ["0"], figure: "figure3", maxScore: 1 },
+            { id: 23, competency: "Coordinates", domain: "Coordinate Geometry", type: "text", question: "What are the coordinates of Point C in Figure 4?", correctAnswer: ["(2,-2)"], figure: "figure4", maxScore: 1 },
+            { id: 24, competency: "Coordinates", domain: "Coordinate Geometry", type: "mc", question: "A line is drawn passing through points B and C in Figure 4. Select two ordered pairs that represent the coordinates of points that are also on this line.", options: [{ value: "a", text: "(1, -1)" }, { value: "b", text: "(1, -2)" }, { value: "c", text: "(2, 3)" }, { value: "d", text: "(3, 2)" }, { value: "e", text: "(4, 7)" }, { value: "f", text: "(5, 6)" }], correctAnswer: ["b", "d", "f"], multi: true, figure: "figure4", maxScore: 2 },
+            { id: 25, competency: "Coordinates", domain: "Coordinate Geometry", type: "mc", question: "Draw a line through points A and B in Figure 4. Which of the following ordered pairs represent all the points that are on this line?", options: [{ value: "a", text: "(x, −2x)" }, { value: "b", text: "(x, −2x+1)" }, { value: "c", text: "(x, −x)" }, { value: "d", text: "(x, −x+1)" }, { value: "e", text: "(x, −x+2)" }], correctAnswer: ["e"], figure: "figure4", maxScore: 1 },
+            { id: 26, competency: "Coordinates", domain: "Coordinate Geometry", type: "written", question: "In Figure 4, connecting the points A, B and C will form a triangle, called triangle ABC. What is the area of triangle ABC? Show your method for getting the area.", figure: "figure4", maxScore: 2 },
+            { id: 27, competency: "Coordinates", domain: "Coordinate Geometry", type: "written", question: "Suppose in Figure 4, point A represents the position of your house, point B represents the position of your school and point C represents the position of the barangay hall. There is a straight road that you can take to the school and the barangay hall from your house. Which is the shorter walk from your house, going to the school or to the barangay hall? Explain your choice.", figure: "figure4", maxScore: 1 },
+            { id: 28, competency: "Coordinates", domain: "Coordinate Geometry", type: "written", question: "Show or explain how you determined your answer in item 27.", figure: "figure4", maxScore: 2 },
+
+            { id: 29, competency: "Variables & Equations", domain: "Number Theory", type: "mc", question: "If r is an integer, select all possible values that can be represented by 2r − 1.", options: [{ value: "-5", text: "-5" }, { value: "-27", text: "-27" }, { value: "-82", text: "-82" }, { value: "99", text: "99" }, { value: "46", text: "46" }, { value: "122", text: "122" }], correctAnswer: ["-5", "-27", "99"], multi: true, maxScore: 3 },
+            { id: 30, competency: "Variables & Equations", domain: "Ratio & Proportions", type: "mc", question: "At a fruit stand, apples are priced at 3 for Php100. Which expressions can be used to find the cost for any number of apples?", options: [{ value: "a", text: "cost = 100/3 * n" }, { value: "b", text: "cost = 3n/100" }, { value: "c", text: "cost = 100n" }, { value: "d", text: "cost = 100n/3" }, { value: "e", text: "3 : 100 = n : cost" }], correctAnswer: ["d", "e"], multi: true, maxScore: 2 },
+            { id: 31, competency: "Variables & Equations", domain: "Equations", type: "written", question: "Write two possible values for a and b that will make the equation in Box 2 true: '17 + a = b + 3'", box: "box2", maxScore: 2 },
+            { id: 32, competency: "Variables & Equations", domain: "Equations", type: "mc", question: "Which statement is always true about a and b? [Refer to Box 2]", options: [{ value: "a", text: "a is greater than b." }, { value: "b", text: "The sum of a and b, (a + b), is 20." }, { value: "c", text: "The difference between b and a, (b − a), is 14." }, { value: "d", text: "a and b can take any value." }], correctAnswer: ["c"], box: "box2", maxScore: 1 },
+            { id: 33, competency: "Variables & Equations", domain: "Equations", type: "mc", question: "What reason can we use to transform equation ①: 5y − 8 = 14 − 3y into equation ②: 5y + 3y − 8 = 14?", options: [{ value: "a", text: "If we subtract 3y from both sides of equation ①, the equation will remain true." }, { value: "b", text: "If we subtract 8 from both sides of equation ①, the equation will remain true." }, { value: "c", text: "If we add 3y to both sides of equation ①, the equation will remain true." }, { value: "d", text: "If we divide both sides of equation ① by 8, the equation will remain true." }], correctAnswer: ["c"], maxScore: 1 },
+            { id: 34, competency: "Variables & Equations", domain: "Linear Modeling", type: "text", question: "How much does it cost to rent the tricycle for 5 days? [Refer to Figure 5]", figure: "figure5", correctAnswer: ["1250"], maxScore: 1 },
+            { id: 35, competency: "Variables & Equations", domain: "Linear Modeling", type: "mc", question: "What does the number 250 in the formula represent? [Refer to Figure 5]", options: [{ value: "a", text: "The daily cost of renting the tricycle." }, { value: "b", text: "The number of days the tricycle is rented." }, { value: "c", text: "The fixed cost of renting the tricycle." }, { value: "d", text: "The total cost of renting for one day." }], correctAnswer: ["a"], figure: "figure5", maxScore: 1 },
+            { id: 36, competency: "Variables & Equations", domain: "Linear Modeling", type: "written", question: "In Figure 5, what does the number 200 in the formula represent?", figure: "figure5", maxScore: 1 },
+            { id: 37, competency: "Variables & Equations", domain: "Linear Modeling", type: "mc", question: "What aspect of the graph in Figure 5 represents the 200 in the formula?", options: [{ value: "a", text: "x-intercept" }, { value: "b", text: "y-intercept" }, { value: "c", text: "slope" }, { value: "d", text: "minimum point" }], correctAnswer: ["b"], figure: "figure5", maxScore: 1 },
+
+            { id: 38, competency: "Triangles", domain: "Geometry", type: "mc", question: "In Figure 6, if the measure of angle P is 30 degrees (p = 30), which of the following are possible values for q and r?", options: [{ value: "a", text: "q = 10 and r = 140" }, { value: "b", text: "q = 10 and r = 130" }, { value: "c", text: "q = 110 and r = 30" }, { value: "d", text: "q = 100 and r = 80" }, { value: "e", text: "q = 100 and r = 50" }], correctAnswer: ["a", "e"], multi: true, figure: "figure6", maxScore: 2 },
+            { id: 39, competency: "Triangles", domain: "Geometry", type: "mc", question: "In Figure 6, if the measure of angle R is 60 degrees (r = 60) and the measure of the exterior angle at Q is 130, what is true about the values of p and q?", options: [{ value: "a", text: "The sum of p and q is 130." }, { value: "b", text: "p and q can have several values." }, { value: "c", text: "The value of p is 70 and the value of q is 50." }, { value: "d", text: "The value of p is 50 and the value of q is 70." }, { value: "e", text: "The value of r plus p is 130." }], correctAnswer: ["c", "e"], multi: true, figure: "figure6", maxScore: 2 },
+            { id: 40, competency: "Triangles", domain: "Geometry", type: "mc", question: "Which of the following statements about the properties of triangles will help determine the values of p and q in the preceding question?", options: [{ value: "a", text: "Each angle of an equilateral triangle is 60 degrees." }, { value: "b", text: "In an isosceles triangle, the base angles are equal." }, { value: "c", text: "The exterior angle and one of the interior angles adjacent to it form a linear pair." }, { value: "d", text: "The measure of the exterior angle of a triangle is equal to the sum of the two remote interior angles." }, { value: "e", text: "There are six exterior angles in any triangle." }, { value: "f", text: "The sum of all the exterior angles of a triangle is 360 degrees." }], correctAnswer: ["c", "d"], multi: true, figure: "figure6", maxScore: 2 },
+            { id: 41, competency: "Triangles", domain: "Similar Triangles", type: "mc", question: "What are the lengths of the other two sides of the triangular dog house? [Refer to Figure 7]", options: [{ value: "a", text: "The other two sides are 1.5 meters each." }, { value: "b", text: "The other two sides are 2 meters and 3 meters." }, { value: "c", text: "The other two sides are 3 meters each." }, { value: "d", text: "The other two sides are 4 meters and 6 meters." }], correctAnswer: ["a"], figure: "figure7", maxScore: 1 },
+            { id: 42, competency: "Triangles", domain: "Similar Triangles", type: "written", question: "In Figure 7, are the sides of the triangular dog house proportional to the sides of the triangular toy storage? Show your solution or explain.", figure: "figure7", maxScore: 2 },
+            { id: 43, competency: "Triangles", domain: "Similar Triangles", type: "mc", question: "The base of the toy storage measures 25 centimeters. What are the lengths of its other two sides? [Refer to Figure 7]", options: [{ value: "a", text: "The other two sides are 37.5 centimeters each." }, { value: "b", text: "The other two sides measure 50 and 75 centimeters." }, { value: "c", text: "The other two sides are 75 centimeters each." }, { value: "d", text: "The other two sides measure 100 and 150 centimeters." }], correctAnswer: ["a"], figure: "figure7", maxScore: 1 },
+            
+            { id: 44, competency: "Circles", domain: "Measurement", type: "written", question: "What is the area of the sidewalk in square meters surrounding the pool? Show your solution. [Refer to Figure 8] Use pi = 3.14.", figure: "figure8", maxScore: 3 },
+            { id: 45, competency: "Circles", domain: "Measurement", type: "mc", question: "The park management decides to divide the pool into two equal parts. One part is 1.5 meters deep, while the children's part is 0.6 meters deep. Which of the following gives the total volume of water?", options: [{ value: "a", text: "10π(2.1) cubic meters" }, { value: "b", text: "25π(2.1) cubic meters" }, { value: "c", text: "10π(2.1) / 2 cubic meters" }, { value: "d", text: "25π(2.1) / 2 cubic meters" }, { value: "e", text: "100π(2.1) / 2 cubic meters" }], correctAnswer: ["d"], figure: "figure9", maxScore: 1 },
+            { id: 46, competency: "Circles", domain: "Measurement", type: "written", question: "The wheel in Figure 10 has a diameter of 60 cm and is rolled exactly 5 times. Show how you can compute the distance travelled by the wheel.", figure: "figure10", maxScore: 2 },
+            { id: 47, competency: "Circles", domain: "Measurement", type: "text", question: "How many degrees did the wheel's pin rotate after 5 rolls? [Refer to Figure 10]", correctAnswer: ["1800", "1800^o", "1800degrees", "1800 degrees"], figure: "figure10", maxScore: 2 }
+        ];
+
+        // Google Sheets Integration URL directly embedded as requested
+        const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzM_uXSKgKiIkLyhSfftkXItgyuql-QHFOfqepnRPGr9rh6scdNTPppresWKg_8l8EHxw/exec";
+
+        /* =========================================================================
+           UPDATED GOOGLE APPS SCRIPT (WITH SEX FIELD ADDED IN COLUMN D / COLUMN 4)
+           =========================================================================
+           Run setupSheet() once inside your spreadsheet editor to recreate headers!
+
+           function setupSheet() {
+             var sheet = SpreadsheetApp.openById("1xqtxTwJcdPbRFuKvrjHuZt8D8_Cqak9xEu6jrXyCPgM").getActiveSheet();
+             sheet.clear();
+             
+             var headers = [
+               "Timestamp", 
+               "Student Name", 
+               "LRN", 
+               "Sex", 
+               "Grade Level", 
+               "Section", 
+               "Total Score", 
+               "Percent Completed"
+             ];
+             for (var i = 1; i <= 47; i++) {
+               headers.push("Item " + i);
+             }
+             sheet.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight("bold").setBackground("#f1f5f9");
+             sheet.setFrozenRows(1);
+           }
+
+           function doPost(e) {
+             try {
+               var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+               var data = JSON.parse(e.postData.contents);
+               var nextRow = sheet.getLastRow() + 1;
+               
+               var rowData = [
+                 new Date(),               // Column 1 (A)
+                 data.name,                // Column 2 (B)
+                 data.lrn,                 // Column 3 (C)
+                 data.sex,                 // Column 4 (D)  <-- Sex recorded here
+                 data.grade,               // Column 5 (E)
+                 data.section,             // Column 6 (F)
+                 data.totalScore,          // Column 7 (G)
+                 data.percentCompleted     // Column 8 (H)
+               ];
+
+               for (var i = 1; i <= 47; i++) {
+                 var answer = data.rawResponses[i];
+                 if (answer === undefined || answer === null) {
+                   rowData.push("");
+                 } else if (Array.isArray(answer)) {
+                   rowData.push(answer.join(", "));
+                 } else {
+                   rowData.push(answer);
+                 }
+               }
+               sheet.getRange(nextRow, 1, 1, rowData.length).setValues([rowData]);
+               return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+             } catch (err) {
+               return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+             }
+           }
+        ========================================================================= */
+
+        // Global State
+        let currentQuestionIdx = 0;
+        let studentAnswers = {};
+        let testStartTime = null;
+        let timerInterval = null;
+        let candidateInfo = { name: "Guest Student", lrn: "", grade: "", section: "", sex: "" };
+
+        // DOM elements
+        const screenWelcome = document.getElementById("screen-welcome");
+        const screenRegistration = document.getElementById("screen-registration");
+        const screenAssessment = document.getElementById("screen-assessment");
+        const screenThankYou = document.getElementById("screen-thank-you");
+        
+        const testNavigation = document.getElementById("test-navigation");
+        const timerContainer = document.getElementById("timer-container");
+        const timerDisplay = document.getElementById("timer-display");
+        const containerInstructions = document.getElementById("container-instructions");
+        const formulasBoxWrapper = document.getElementById("formulas-box-wrapper");
+
+        const btnProceedToReg = document.getElementById("btn-proceed-to-reg");
+        const btnBackToWelcome = document.getElementById("btn-back-to-welcome");
+        const btnStartAssessment = document.getElementById("btn-start-assessment");
+        const btnReturnHome = document.getElementById("btn-return-home");
+        
+        const btnToggleInstructions = document.getElementById("btn-toggle-instructions");
+        const btnCloseInstructionsMain = document.getElementById("btn-close-instructions-main");
+        const btnPrevQ = document.getElementById("btn-prev-q");
+        const btnNextQ = document.getElementById("btn-next-q");
+        const btnSubmitExam = document.getElementById("btn-submit-exam");
+        const btnViewSummaryAgain = document.getElementById("btn-view-summary-again");
+
+        const inputStudentName = document.getElementById("input-student-name");
+        const inputStudentLrn = document.getElementById("input-student-lrn");
+        const selectStudentGrade = document.getElementById("select-student-grade");
+        const inputStudentSection = document.getElementById("input-student-section");
+        const selectStudentSex = document.getElementById("select-student-sex");
+
+        const sidebarStudentName = document.getElementById("sidebar-student-name");
+        const sidebarStudentLrn = document.getElementById("sidebar-student-lrn");
+        const sidebarStudentMeta = document.getElementById("sidebar-student-meta");
+        const sidebarProgressText = document.getElementById("sidebar-progress-text");
+        const sidebarProgressBar = document.getElementById("sidebar-progress-bar");
+        const tyStudentName = document.getElementById("ty-student-name");
+
+        const modalContainer = document.getElementById("modal-container");
+        const modalTitle = document.getElementById("modal-title");
+        const modalText = document.getElementById("modal-text");
+        const modalBtnConfirm = document.getElementById("modal-btn-confirm");
+        const modalBtnCancel = document.getElementById("modal-btn-cancel");
+        const modalIcon = document.getElementById("modal-icon");
+        
+        const modalStudentResults = document.getElementById("modal-student-results");
+        const btnCloseStudentResults = document.getElementById("btn-close-student-results");
+        const btnDoneStudentResults = document.getElementById("btn-done-student-results");
+        const studentResultsTbody = document.getElementById("student-results-tbody");
+        const studentTotalEarned = document.getElementById("student-total-earned");
+        const studentTotalPending = document.getElementById("student-total-pending");
+        const studentTotalMax = document.getElementById("student-total-max");
+
+        window.onload = function() {
+            renderQuickNav();
+            loadProgress();
+        };
+
+        function showModal({ title, text, confirmText, cancelText, successCallback, type="confirm" }) {
+            modalTitle.innerText = title;
+            modalText.innerText = text;
+            modalBtnConfirm.innerText = confirmText || "Confirm";
+            
+            if (type === "alert") {
+                modalBtnCancel.classList.add("hidden");
+                modalIcon.className = "fa-solid fa-circle-info text-blue-500 text-lg";
+            } else {
+                modalBtnCancel.classList.remove("hidden");
+                modalBtnCancel.innerText = cancelText || "Cancel";
+                modalIcon.className = "fa-solid fa-circle-question text-amber-500 text-lg";
+            }
+            
+            modalContainer.classList.remove("hidden");
+            modalContainer.classList.add("flex");
+
+            const cleanUp = () => {
+                modalContainer.classList.add("hidden");
+                modalContainer.classList.remove("flex");
+            };
+
+            modalBtnConfirm.onclick = () => {
+                cleanUp();
+                if(successCallback) successCallback();
+            };
+            modalBtnCancel.onclick = cleanUp;
+        }
+
+        // --- Flow Navigation ---
+        btnProceedToReg.addEventListener("click", () => {
+            screenWelcome.classList.add("hidden");
+            screenRegistration.classList.remove("hidden");
+        });
+
+        btnBackToWelcome.addEventListener("click", () => {
+            screenRegistration.classList.add("hidden");
+            screenWelcome.classList.remove("hidden");
+        });
+
+        btnStartAssessment.addEventListener("click", () => {
+            const name = inputStudentName.value.trim();
+            const lrn = inputStudentLrn.value.trim();
+            const grade = selectStudentGrade.value;
+            const section = inputStudentSection.value.trim();
+            const sex = selectStudentSex.value;
+            
+            if (!name) {
+                showModal({ title: "Missing Information", text: "Please enter your full name to proceed with the assessment.", type: "alert" });
+                return;
+            }
+            if (!grade) {
+                showModal({ title: "Missing Information", text: "Please select your Grade Level to proceed with the assessment.", type: "alert" });
+                return;
+            }
+            if (!section) {
+                showModal({ title: "Missing Information", text: "Please enter your Section to proceed with the assessment.", type: "alert" });
+                return;
+            }
+            if (!sex) {
+                showModal({ title: "Missing Information", text: "Please select your Sex to proceed with the assessment.", type: "alert" });
+                return;
+            }
+
+            candidateInfo.name = name;
+            candidateInfo.lrn = lrn || "N/A";
+            candidateInfo.grade = grade;
+            candidateInfo.section = section;
+            candidateInfo.sex = sex;
+
+            sidebarStudentName.innerText = candidateInfo.name;
+            sidebarStudentLrn.innerText = `LRN: ${candidateInfo.lrn}`;
+            sidebarStudentMeta.innerText = `${candidateInfo.grade} - ${candidateInfo.section} (${candidateInfo.sex})`;
+
+            screenRegistration.classList.add("hidden");
+            screenAssessment.classList.remove("hidden");
+            testNavigation.classList.remove("hidden");
+            timerContainer.classList.remove("hidden");
+
+            startTimer(90 * 60);
+            renderQuestion(0);
+        });
+
+        // "Return to Home" Button Action
+        btnReturnHome.addEventListener("click", () => {
+            // Reset all local variables & student metrics
+            currentQuestionIdx = 0;
+            studentAnswers = {};
+            testStartTime = null;
+            clearInterval(timerInterval);
+            candidateInfo = { name: "Guest Student", lrn: "", grade: "", section: "", sex: "" };
+
+            // Clear registration fields
+            inputStudentName.value = "";
+            inputStudentLrn.value = "";
+            selectStudentGrade.selectedIndex = 0;
+            inputStudentSection.value = "";
+            selectStudentSex.selectedIndex = 0;
+
+            // Update UI sidebar back to default state
+            sidebarStudentName.innerText = "Guest Student";
+            sidebarStudentLrn.innerText = "LRN: ---";
+            sidebarStudentMeta.innerText = "Grade & Section: ---";
+            
+            // Re-render maps
+            loadProgress();
+            renderQuickNav();
+
+            // Switch view back to Landing interface
+            screenThankYou.classList.add("hidden");
+            testNavigation.classList.add("hidden");
+            timerContainer.classList.add("hidden");
+            screenWelcome.classList.remove("hidden");
+        });
+
+        btnToggleInstructions.addEventListener("click", () => {
+            formulasBoxWrapper.classList.toggle("hidden");
+        });
+        btnCloseInstructionsMain.addEventListener("click", () => {
+            formulasBoxWrapper.classList.add("hidden");
+        });
+
+        function renderQuickNav() {
+            const container = document.getElementById("nav-grid");
+            container.innerHTML = "";
+            RMA_QUESTIONS.forEach((q, idx) => {
+                const btn = document.createElement("button");
+                btn.innerText = q.id;
+                btn.id = `nav-btn-${idx}`;
+                btn.addEventListener("click", () => renderQuestion(idx));
+                container.appendChild(btn);
+            });
+            updateQuickNavStyles();
+        }
+
+        function updateQuickNavStyles() {
+            RMA_QUESTIONS.forEach((q, idx) => {
+                const btn = document.getElementById(`nav-btn-${idx}`);
+                if (!btn) return;
+
+                const isAnswered = studentAnswers[q.id] !== undefined && studentAnswers[q.id] !== "" && (Array.isArray(studentAnswers[q.id]) ? studentAnswers[q.id].length > 0 : true);
+                const isActive = currentQuestionIdx === idx;
+
+                btn.className = "p-2 font-bold text-xs rounded-xl border text-center transition-all duration-200 shadow-sm hover:scale-105 active:scale-95";
+
+                if (isActive) {
+                    btn.classList.add("border-blue-600", "bg-blue-50", "text-blue-700", "ring-2", "ring-blue-100");
+                } else if (isAnswered) {
+                    btn.classList.add("bg-emerald-500", "text-white", "border-emerald-600");
+                } else {
+                    btn.classList.add("bg-slate-100", "text-slate-600", "border-slate-200", "hover:bg-slate-200");
+                }
+            });
+        }
+
+        function populateAndShowStudentResults() {
+            const competencyStats = {
+                "Number Expressions": { earned: 0, max: 0, pending: 0 },
+                "Data": { earned: 0, max: 0, pending: 0 },
+                "Coordinates": { earned: 0, max: 0, pending: 0 },
+                "Variables & Equations": { earned: 0, max: 0, pending: 0 },
+                "Triangles": { earned: 0, max: 0, pending: 0 },
+                "Circles": { earned: 0, max: 0, pending: 0 }
+            };
+
+            let totalEarned = 0;
+            let totalMax = 0;
+            let totalPending = 0;
+
+            RMA_QUESTIONS.forEach(q => {
+                const points = computeItemScore(q);
+                competencyStats[q.competency].earned += points;
+                competencyStats[q.competency].max += q.maxScore;
+                
+                if (q.type === 'written') {
+                    competencyStats[q.competency].pending += q.maxScore;
+                }
+            });
+
+            studentResultsTbody.innerHTML = "";
+            for (const [key, val] of Object.entries(competencyStats)) {
+                totalEarned += val.earned;
+                totalMax += val.max;
+                totalPending += val.pending;
+                
+                studentResultsTbody.innerHTML += `
+                    <tr class="border-b border-slate-100">
+                        <td class="p-3 font-bold text-slate-700">${key}</td>
+                        <td class="p-3 text-center font-semibold text-blue-600">${val.earned}</td>
+                        <td class="p-3 text-center font-semibold text-amber-500">${val.pending > 0 ? '+' + val.pending : '-'}</td>
+                        <td class="p-3 text-center font-bold text-slate-800">${val.max}</td>
+                    </tr>
+                `;
+            }
+
+            studentTotalEarned.innerText = totalEarned;
+            studentTotalPending.innerText = `+${totalPending}`;
+            studentTotalMax.innerText = totalMax;
+
+            modalStudentResults.classList.remove("hidden");
+            modalStudentResults.classList.add("flex");
+        }
+
+        function closeStudentResultsModal() {
+            modalStudentResults.classList.add("hidden");
+            modalStudentResults.classList.remove("flex");
+            tyStudentName.innerText = candidateInfo.name;
+            screenThankYou.classList.remove("hidden");
+        }
+
+        btnCloseStudentResults.addEventListener("click", closeStudentResultsModal);
+        btnDoneStudentResults.addEventListener("click", closeStudentResultsModal);
+        btnViewSummaryAgain.addEventListener("click", () => populateAndShowStudentResults());
+
+        function finishAssessment() {
+            clearInterval(timerInterval);
+            timerContainer.innerHTML = `<span class="text-emerald-700 font-bold bg-emerald-50 px-3 py-1 rounded-lg"><i class="fa-solid fa-circle-check"></i> Completed</span>`;
+            
+            // Hide exam screens
+            screenAssessment.classList.add("hidden");
+            testNavigation.classList.add("hidden");
+            formulasBoxWrapper.classList.add("hidden");
+            screenWelcome.classList.add("hidden");
+            screenRegistration.classList.add("hidden");
+            
+            // Show result modal automatically
+            populateAndShowStudentResults();
+
+            // Auto sync to Google Sheets silently in the background
+            syncResultsToGoogleSheet();
+        }
+
+        function startTimer(durationSeconds) {
+            let timer = durationSeconds;
+            testStartTime = new Date();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const minutes = parseInt(timer / 60, 10);
+                const seconds = parseInt(timer % 60, 10);
+                timerDisplay.textContent = `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+                if (--timer < 0) {
+                    showModal({ 
+                        title: "Time is Up!", 
+                        text: "Your limit has expired. Your answers will now be finalized and submitted.", 
+                        confirmText: "Submit Answers", 
+                        type: "alert", 
+                        successCallback: finishAssessment 
+                    });
+                }
+            }, 1000);
+        }
+
+        function checkCompletionAndSubmit() {
+            let unanswered = [];
+            RMA_QUESTIONS.forEach(q => {
+                const ans = studentAnswers[q.id];
+                if (ans === undefined || ans === "" || (Array.isArray(ans) && ans.length === 0)) {
+                    unanswered.push(q.id);
+                }
+            });
+
+            if (unanswered.length > 0) {
+                showModal({
+                    title: "Incomplete Assessment",
+                    text: `You have ${unanswered.length} unanswered item(s). Please review and answer the following questions before submitting: ${unanswered.join(", ")}`,
+                    confirmText: "Return to Exam",
+                    type: "alert"
+                });
+                return;
+            }
+
+            // If all answered, show standard submit prompt
+            showModal({
+                title: "Submit Assessment?",
+                text: "Are you sure you want to finalize your exam answers? You will not be able to return to edit them.",
+                confirmText: "Submit & Complete",
+                cancelText: "Keep Answering",
+                successCallback: finishAssessment
+            });
+        }
+
+        function renderQuestion(index) {
+            if (index < 0 || index >= RMA_QUESTIONS.length) return;
+            currentQuestionIdx = index;
+            const q = RMA_QUESTIONS[index];
+            
+            document.getElementById("active-item-domain").innerText = q.domain;
+            document.getElementById("active-item-number").innerText = `Question ${q.id} of 47`;
+            document.getElementById("question-text").innerText = q.question;
+
+            renderVisual(q);
+
+            const inputArea = document.getElementById("answer-inputs-container");
+            inputArea.innerHTML = "";
+
+            if (q.type === "mc") {
+                const grid = document.createElement("div");
+                grid.className = "grid grid-cols-1 gap-3";
+                q.options.forEach(opt => {
+                    const label = document.createElement("label");
+                    const isChecked = studentAnswers[q.id] && studentAnswers[q.id].includes(opt.value);
+                    
+                    label.className = `flex items-center gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${isChecked ? 'bg-blue-50/50 border-blue-500 ring-1 ring-blue-500' : 'bg-slate-50/30 border-slate-200 hover:bg-slate-50'}`;
+                    
+                    const input = document.createElement("input");
+                    input.type = "checkbox"; 
+                    input.name = `q-${q.id}`;
+                    input.value = opt.value;
+                    input.checked = isChecked || false;
+                    input.className = "w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500 rounded";
+                    
+                    input.addEventListener("change", () => {
+                        if (!studentAnswers[q.id]) studentAnswers[q.id] = [];
+                        if (input.checked) {
+                            if (!studentAnswers[q.id].includes(opt.value)) {
+                                studentAnswers[q.id].push(opt.value);
+                            }
+                        } else {
+                            studentAnswers[q.id] = studentAnswers[q.id].filter(val => val !== opt.value);
+                        }
+                        updateQuickNavStyles();
+                        loadProgress();
+                        renderQuestion(currentQuestionIdx); // trigger styling updates
+                    });
+                    label.appendChild(input);
+                    const optText = document.createElement("span");
+                    optText.className = "text-sm font-semibold text-slate-700";
+                    optText.innerText = `${opt.value.toUpperCase()}. ${opt.text}`;
+                    label.appendChild(optText);
+                    grid.appendChild(label);
+                });
+                inputArea.appendChild(grid);
+            } else if (q.type === "text") {
+                const wrapper = document.createElement("div");
+                wrapper.className = "space-y-2";
+                wrapper.innerHTML = `<label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Your Math Answer</label>`;
+                const input = document.createElement("input");
+                input.type = "text";
+                input.value = studentAnswers[q.id] || "";
+                input.placeholder = "Type your final response...";
+                input.className = "w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500";
+                input.addEventListener("input", (e) => {
+                    studentAnswers[q.id] = e.target.value;
+                    updateQuickNavStyles();
+                    loadProgress();
+                });
+                wrapper.appendChild(input);
+                inputArea.appendChild(wrapper);
+            } else if (q.type === "written") {
+                const wrapper = document.createElement("div");
+                wrapper.className = "space-y-2";
+                wrapper.innerHTML = `<label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Write explanation, solution, or steps (Taglish, English, or Filipino is fully accepted)</label>`;
+                const textarea = document.createElement("textarea");
+                textarea.rows = 4;
+                textarea.value = studentAnswers[q.id] || "";
+                textarea.placeholder = "Isulat ang iyong paliwanag o solusyon dito...";
+                textarea.className = "w-full px-4 py-3 rounded-2xl border border-slate-200 bg-white text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 leading-relaxed";
+                textarea.addEventListener("input", (e) => {
+                    studentAnswers[q.id] = e.target.value;
+                    updateQuickNavStyles();
+                    loadProgress();
+                });
+                wrapper.appendChild(textarea);
+                inputArea.appendChild(wrapper);
+            }
+
+            btnPrevQ.disabled = index === 0;
+            if (index === 0) btnPrevQ.classList.add("opacity-55", "cursor-not-allowed");
+            else btnPrevQ.classList.remove("opacity-55", "cursor-not-allowed");
+            
+            btnNextQ.innerText = (index === RMA_QUESTIONS.length - 1) ? "Submit Assessment" : "Next";
+            updateQuickNavStyles();
+        }
+
+        btnPrevQ.addEventListener("click", () => { if (currentQuestionIdx > 0) renderQuestion(currentQuestionIdx - 1); });
+        
+        btnNextQ.addEventListener("click", () => {
+            if (currentQuestionIdx < RMA_QUESTIONS.length - 1) {
+                renderQuestion(currentQuestionIdx + 1);
+            } else {
+                checkCompletionAndSubmit();
+            }
+        });
+
+        btnSubmitExam.addEventListener("click", checkCompletionAndSubmit);
+
+        function loadProgress() {
+            let answered = 0;
+            RMA_QUESTIONS.forEach(q => {
+                const ans = studentAnswers[q.id];
+                if (ans !== undefined && ans !== "") {
+                    if (Array.isArray(ans)) { if (ans.length > 0) answered++; } 
+                    else answered++;
+                }
+            });
+            sidebarProgressText.innerText = `${answered} / 47 answered`;
+            const pct = (answered / 47) * 100;
+            sidebarProgressBar.style.width = `${pct}%`;
+        }
+
+        // Grading Engine (Handles Partial Credits correctly aligned with Key)
+        function computeItemScore(q) {
+            const ans = studentAnswers[q.id];
+            if ((ans === undefined || ans === "") && q.type !== 'written') return 0;
+            
+            if (q.type === 'mc') {
+                if (!ans || !Array.isArray(ans) || ans.length === 0) return 0;
+                
+                const hasIncorrect = ans.some(val => !q.correctAnswer.includes(val));
+                if (hasIncorrect) {
+                    if (q.id === 30 && ans.length === 1 && ans.includes("c")) {
+                        return 1;
+                    }
+                    return 0;
+                }
+                
+                const correctHits = ans.filter(val => q.correctAnswer.includes(val)).length;
+                if (q.id === 29) { 
+                    return correctHits;
+                } else if (q.id === 24) { 
+                    if (correctHits >= 2) return 2;
+                    if (correctHits === 1) return 1;
+                    return 0;
+                } else { 
+                    if (correctHits === q.correctAnswer.length) return q.maxScore;
+                    if (correctHits > 0) return 1;
+                }
+                return 0;
+            } else if (q.type === 'text') {
+                if(!ans) return 0;
+                const cleanAns = ans.toLowerCase().replace(/\s+/g, "");
+                let isCorrect = false;
+                q.correctAnswer.forEach(validAns => {
+                    if (cleanAns.includes(validAns.toLowerCase().replace(/\s+/g, ""))) isCorrect = true;
+                });
+                if (q.id === 23 && cleanAns === "(4,4)") isCorrect = true;
+                return isCorrect ? q.maxScore : 0;
+            } else if (q.type === 'written') {
+                return 0; // Graded manually by teacher
+            }
+            return 0;
+        }
+
+        // -------------------------------------------------------------
+        // GOOGLE SHEETS LIVE SYNC UTILITY (Background Sync)
+        // -------------------------------------------------------------
+        async function syncResultsToGoogleSheet() {
+            if (!GOOGLE_SHEET_WEB_APP_URL) {
+                console.warn("Google Sheets Sync Skipped: No Web App URL provided in the configuration.");
+                return;
+            }
+
+            let totalScore = 0;
+            const competencyBreakdown = {
+                "Number Expressions": 0,
+                "Data": 0,
+                "Coordinates": 0,
+                "Variables & Equations": 0,
+                "Triangles": 0,
+                "Circles": 0
+            };
+
+            RMA_QUESTIONS.forEach(q => {
+                const pts = computeItemScore(q);
+                totalScore += pts;
+                competencyBreakdown[q.competency] += pts;
+            });
+
+            const answeredCount = Object.keys(studentAnswers).length;
+            const completionPct = `${Math.round((answeredCount / 47) * 100)}%`;
+
+            const payload = {
+                name: candidateInfo.name,
+                lrn: candidateInfo.lrn,
+                sex: candidateInfo.sex,  // <-- Added student sex mapping
+                grade: candidateInfo.grade,
+                section: candidateInfo.section,
+                totalScore: `${totalScore} / 72`,
+                percentCompleted: completionPct,
+                competencyBreakdown: competencyBreakdown,
+                rawResponses: studentAnswers // Sent to be parsed column-by-column by Google Apps Script
+            };
+
+            try {
+                await fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                    method: "POST",
+                    mode: "no-cors", // Required for Google Sheets Apps Script calls
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                console.log("Results synced to Google Sheets successfully.");
+            } catch (err) {
+                console.error("Failed to sync to Google Sheets:", err);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // DYNAMIC VECTOR VISUAL DRAWING UTILITY
+        // -------------------------------------------------------------
+        function renderVisual(q) {
+            const container = document.getElementById("question-visual-box");
+            container.innerHTML = "";
+
+            if (q.box === "box1") {
+                container.innerHTML = `
+                    <div class="text-center py-2">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Box 1: Arithmetic Sequences</span>
+                        <div class="grid grid-cols-2 gap-3 max-w-sm mx-auto">
+                            <div class="bg-white border border-slate-200 p-2.5 rounded-xl font-mono text-sm shadow-sm text-slate-700">2 × 2 − 3 × 1</div>
+                            <div class="bg-white border border-slate-200 p-2.5 rounded-xl font-mono text-sm shadow-sm text-slate-700">3 × 3 − 4 × 2</div>
+                            <div class="bg-white border border-slate-200 p-2.5 rounded-xl font-mono text-sm shadow-sm text-slate-700">4 × 4 − 5 × 3</div>
+                            <div class="bg-white border border-slate-200 p-2.5 rounded-xl font-mono text-sm shadow-sm text-slate-700">5 × 5 − 6 × 4</div>
+                        </div>
+                    </div>
+                `;
+            } else if (q.table === "table1") {
+                container.innerHTML = `
+                    <div class="w-full max-w-md overflow-x-auto">
+                        <table class="w-full text-xs text-left border border-slate-200 rounded-xl overflow-hidden">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-600 font-bold">
+                                    <th class="p-2 border-b border-slate-200">Exponential Form</th>
+                                    <th class="p-2 border-b border-slate-200">Expanded Form</th>
+                                    <th class="p-2 border-b border-slate-200">Power of 2</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white text-slate-700">
+                                <tr><td class="p-2 font-mono">2<sup>2</sup></td><td class="p-2">2 × 2</td><td class="p-2 font-bold text-blue-600">4</td></tr>
+                                <tr><td class="p-2 font-mono">2<sup>3</sup></td><td class="p-2">2 × 2 × 2</td><td class="p-2 font-bold text-blue-600">8</td></tr>
+                                <tr><td class="p-2 font-mono">2<sup>4</sup></td><td class="p-2">2 × 2 × 2 × 2</td><td class="p-2 font-bold text-blue-600">16</td></tr>
+                                <tr><td class="p-2 font-mono">2<sup>5</sup></td><td class="p-2">2 × 2 × 2 × 2 × 2</td><td class="p-2 font-bold text-blue-600">32</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else if (q.figure === "figure1") {
+                container.innerHTML = `
+                    <div class="w-full max-w-lg text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 1: Absences vs Academic Grade</span>
+                        <svg viewBox="0 0 450 250" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-2">
+                            <line x1="40" y1="210" x2="420" y2="210" stroke="#cbd5e1" stroke-width="1.5"/>
+                            <line x1="40" y1="20" x2="40" y2="210" stroke="#cbd5e1" stroke-width="1.5"/>
+                            <line x1="40" y1="120" x2="420" y2="120" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="4"/>
+                            <text x="350" y="115" fill="#f43f5e" class="text-[9px] font-bold">Grade = 84</text>
+                            <text x="210" y="240" fill="#64748b" class="text-[10px] font-bold text-center">Number of Absences</text>
+                            <text x="15" y="110" fill="#64748b" class="text-[10px] font-bold" transform="rotate(-90,15,110)">Academic Grade</text>
+                            <circle cx="80" cy="40" r="5" fill="#6366f1" />
+                            <circle cx="120" cy="55" r="5" fill="#6366f1" />
+                            <circle cx="160" cy="85" r="5" fill="#6366f1" />
+                            <circle cx="200" cy="100" r="5" fill="#6366f1" />
+                            <circle cx="240" cy="140" r="5" fill="#ef4444" />
+                            <circle cx="280" cy="155" r="5" fill="#ef4444" />
+                            <circle cx="320" cy="170" r="5" fill="#ef4444" />
+                            <circle cx="360" cy="180" r="5" fill="#ef4444" />
+                            <circle cx="400" cy="200" r="5" fill="#ef4444" />
+                            <text x="80" y="222" fill="#94a3b8" class="text-[9px] font-semibold">1</text>
+                            <text x="160" y="222" fill="#94a3b8" class="text-[9px] font-semibold">3</text>
+                            <text x="240" y="222" fill="#94a3b8" class="text-[9px] font-semibold">5</text>
+                            <text x="320" y="222" fill="#94a3b8" class="text-[9px] font-semibold">7</text>
+                            <text x="400" y="222" fill="#94a3b8" class="text-[9px] font-semibold">9</text>
+                            <text x="20" y="45" fill="#94a3b8" class="text-[9px] font-semibold">95</text>
+                            <text x="20" y="123" fill="#94a3b8" class="text-[9px] font-semibold">84</text>
+                            <text x="20" y="205" fill="#94a3b8" class="text-[9px] font-semibold">70</text>
+                        </svg>
+                    </div>
+                `;
+            } else if (q.figure === "figure2") {
+                container.innerHTML = `
+                    <div class="w-full max-w-lg text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 2: Family Monthly Incomes (PHP)</span>
+                        <svg viewBox="0 0 450 200" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-2">
+                            <text x="15" y="60" fill="#334155" class="text-[10px] font-bold">Purok 1</text>
+                            <line x1="80" y1="55" x2="300" y2="55" stroke="#94a3b8" stroke-dasharray="2"/>
+                            <rect x="120" y="40" width="120" height="30" fill="#3b82f6" fill-opacity="0.2" stroke="#3b82f6" stroke-width="1.5"/>
+                            <line x1="180" y1="40" x2="180" y2="70" stroke="#3b82f6" stroke-width="2"/>
+                            
+                            <text x="15" y="130" fill="#334155" class="text-[10px] font-bold">Purok 2</text>
+                            <line x1="40" y1="125" x2="420" y2="125" stroke="#94a3b8" stroke-dasharray="2"/>
+                            <rect x="100" y="110" width="220" height="30" fill="#10b981" fill-opacity="0.2" stroke="#10b981" stroke-width="1.5"/>
+                            <line x1="210" y1="110" x2="210" y2="140" stroke="#10b981" stroke-width="2"/>
+
+                            <line x1="40" y1="170" x2="420" y2="170" stroke="#cbd5e1" stroke-width="1"/>
+                            <text x="40" y="185" fill="#94a3b8" class="text-[8px] font-mono">10,000</text>
+                            <text x="135" y="185" fill="#94a3b8" class="text-[8px] font-mono">20,000</text>
+                            <text x="230" y="185" fill="#94a3b8" class="text-[8px] font-mono">30,000</text>
+                            <text x="325" y="185" fill="#94a3b8" class="text-[8px] font-mono">40,000</text>
+                            <text x="420" y="185" fill="#94a3b8" class="text-[8px] font-mono">50,000</text>
+                        </svg>
+                    </div>
+                `;
+            } else if (q.table === "table2") {
+                container.innerHTML = `
+                    <div class="w-full max-w-md overflow-x-auto">
+                        <table class="w-full text-xs text-left border border-slate-200 rounded-xl overflow-hidden">
+                            <thead>
+                                <tr class="bg-indigo-900 text-white font-bold">
+                                    <th class="p-2 border-r border-indigo-800">Activity Participation</th>
+                                    <th class="p-2 border-r border-indigo-800">Sports</th>
+                                    <th class="p-2 border-r border-indigo-800">No Sports</th>
+                                    <th class="p-2">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white text-slate-700 font-semibold">
+                                <tr><td class="p-2 bg-slate-50 border-r border-slate-200">Participated in Music</td><td class="p-2 text-blue-600 border-r border-slate-100">18</td><td class="p-2 text-blue-600 border-r border-slate-100">31</td><td class="p-2 bg-slate-50 font-bold">49</td></tr>
+                                <tr><td class="p-2 bg-slate-50 border-r border-slate-200">No Music</td><td class="p-2 text-blue-600 border-r border-slate-100">42</td><td class="p-2 text-blue-600 border-r border-slate-100">19</td><td class="p-2 bg-slate-50 font-bold">61</td></tr>
+                                <tr class="bg-slate-50 font-extrabold text-slate-900"><td class="p-2 border-r border-slate-200">Total</td><td class="p-2 border-r border-slate-100">60</td><td class="p-2 border-r border-slate-100">50</td><td class="p-2 text-indigo-600">110</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else if (q.figure === "figure3") {
+                container.innerHTML = `
+                    <div class="w-full max-w-lg text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 3: Coordinates Number Line</span>
+                        <svg viewBox="0 0 450 80" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-2">
+                            <line x1="20" y1="40" x2="430" y2="40" stroke="#475569" stroke-width="2"/>
+                            
+                            <!-- -500 -->
+                            <line x1="50" y1="35" x2="50" y2="45" stroke="#475569" stroke-width="1.5"/>
+                            <text x="35" y="25" fill="#64748b" class="text-[8px] font-mono font-bold">-500</text>
+                            
+                            <!-- Point F (-300) -->
+                            <line x1="130" y1="35" x2="130" y2="45" stroke="#475569" stroke-width="1.5"/>
+                            <circle cx="130" cy="40" r="5" fill="#ef4444"/>
+                            <text x="127" y="18" fill="#ef4444" class="text-[10px] font-bold">F</text>
+                            <text x="115" y="58" fill="#64748b" class="text-[8px] font-mono">-300</text>
+
+                            <!-- -100 -->
+                            <line x1="210" y1="35" x2="210" y2="45" stroke="#475569" stroke-width="1.5"/>
+                            <text x="195" y="25" fill="#64748b" class="text-[8px] font-mono">-100</text>
+
+                            <!-- Point G (0) (Key verified position 0 is roughly here) -->
+                            <line x1="250" y1="35" x2="250" y2="45" stroke="#475569" stroke-width="1.5"/>
+                            <circle cx="250" cy="40" r="5" fill="#10b981"/>
+                            <text x="247" y="18" fill="#10b981" class="text-[10px] font-bold">G</text>
+                            
+                            <!-- 300 -->
+                            <line x1="370" y1="35" x2="370" y2="45" stroke="#475569" stroke-width="1.5"/>
+                            <text x="360" y="25" fill="#64748b" class="text-[8px] font-mono">300</text>
+                        </svg>
+                    </div>
+                `;
+            } else if (q.figure === "figure4") {
+                container.innerHTML = `
+                    <div class="w-full max-w-xs text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 4: Cartesian Plane Grid</span>
+                        <svg viewBox="0 0 250 250" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-2">
+                            <g stroke="#f1f5f9" stroke-width="1">
+                                <line x1="25" y1="0" x2="25" y2="250"/> <line x1="50" y1="0" x2="50" y2="250"/> <line x1="75" y1="0" x2="75" y2="250"/> <line x1="100" y1="0" x2="100" y2="250"/> <line x1="125" y1="0" x2="125" y2="250"/> <line x1="150" y1="0" x2="150" y2="250"/> <line x1="175" y1="0" x2="175" y2="250"/> <line x1="200" y1="0" x2="200" y2="250"/> <line x1="225" y1="0" x2="225" y2="250"/>
+                                <line x1="0" y1="25" x2="250" y2="25"/> <line x1="0" y1="50" x2="250" y2="50"/> <line x1="0" y1="75" x2="250" y2="75"/> <line x1="0" y1="100" x2="250" y2="100"/> <line x1="0" y1="125" x2="250" y2="125"/> <line x1="0" y1="150" x2="250" y2="150"/> <line x1="0" y1="175" x2="250" y2="175"/> <line x1="0" y1="200" x2="250" y2="200"/> <line x1="0" y1="225" x2="250" y2="225"/>
+                            </g>
+                            <line x1="125" y1="0" x2="125" y2="250" stroke="#94a3b8" stroke-width="2"/>
+                            <line x1="0" y1="125" x2="250" y2="125" stroke="#94a3b8" stroke-width="2"/>
+                            <!-- A(0, 2) -->
+                            <circle cx="125" cy="75" r="5" fill="#3b82f6"/> <text x="132" y="70" fill="#3b82f6" class="text-[10px] font-bold">A(0, 2)</text>
+                            <!-- B(1, 1) -->
+                            <circle cx="150" cy="100" r="5" fill="#10b981"/> <text x="157" y="95" fill="#10b981" class="text-[10px] font-bold">B(1, 1)</text>
+                            <!-- C(2, -2) -->
+                            <circle cx="175" cy="175" r="5" fill="#f59e0b"/> <text x="182" y="170" fill="#f59e0b" class="text-[10px] font-bold">C(2, -2)</text>
+                        </svg>
+                    </div>
+                `;
+            } else if (q.box === "box2") {
+                container.innerHTML = `
+                    <div class="text-center py-4 bg-amber-50 rounded-2xl border border-amber-200 px-6 max-w-sm mx-auto">
+                        <span class="block text-xs font-bold text-amber-500 uppercase tracking-wide mb-1">Box 2: Equation Challenge</span>
+                        <div class="text-2xl font-black text-slate-800 tracking-wider code-font">
+                            17 + <span class="text-blue-600">a</span> = <span class="text-emerald-600">b</span> + 3
+                        </div>
+                    </div>
+                `;
+            } else if (q.figure === "figure5") {
+                container.innerHTML = `
+                    <div class="w-full max-w-sm text-center space-y-2">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Figure 5: Tricycle Rent Formula</span>
+                        <div class="bg-indigo-900 text-white rounded-2xl p-4 font-bold text-sm shadow-md">
+                            <p class="text-xs uppercase tracking-wide text-indigo-300">Rental Daily Formula</p>
+                            <p class="text-lg mt-1 code-font">Cost = 250d + 200</p>
+                            <p class="text-[10px] text-indigo-200 mt-1 italic">where d is the number of active rental days</p>
+                        </div>
+                    </div>
+                `;
+            } else if (q.figure === "figure6") {
+                container.innerHTML = `
+                    <div class="w-full max-w-xs text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 6: Angles Triangle PQR</span>
+                        <svg viewBox="0 0 200 200" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-3">
+                            <polygon points="50,150 150,150 100,50" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="65" y="140" fill="#64748b" class="text-[12px] font-bold">p</text>
+                            <text x="125" y="140" fill="#64748b" class="text-[12px] font-bold">q</text>
+                            <text x="96" y="75" fill="#64748b" class="text-[12px] font-bold">r</text>
+                            <text x="40" y="165" fill="#1e293b" class="text-[11px] font-bold">P</text>
+                            <text x="155" y="165" fill="#1e293b" class="text-[11px] font-bold">Q</text>
+                            <text x="95" y="38" fill="#1e293b" class="text-[11px] font-bold">R</text>
+                            <line x1="150" y1="150" x2="190" y2="150" stroke="#64748b" stroke-width="1.5" stroke-dasharray="2"/>
+                        </svg>
+                    </div>
+                `;
+            } else if (q.figure === "figure7") {
+                container.innerHTML = `
+                    <div class="w-full max-w-xs text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 7: Similar Triangle Doghouse</span>
+                        <svg viewBox="0 0 200 200" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-3">
+                            <polygon points="20,180 180,180 100,30" fill="none" stroke="#1e293b" stroke-width="2"/>
+                            <polygon points="60,110 140,110 100,30" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+                            <text x="100" y="25" fill="#1e293b" class="text-[10px] font-bold">Top</text>
+                            <text x="10" y="195" fill="#1e293b" class="text-[10px] font-bold">Floor (1 meter)</text>
+                            <text x="100" y="105" fill="#3b82f6" class="text-[9px] font-bold">Toy Storage Base (25 cm)</text>
+                        </svg>
+                    </div>
+                `;
+            } else if (q.figure === "figure8") {
+                container.innerHTML = `
+                    <div class="w-full max-w-xs text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 8: Pool Sidewalk (Top View)</span>
+                        <svg viewBox="0 0 200 200" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-3">
+                            <circle cx="100" cy="100" r="70" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+                            <circle cx="100" cy="100" r="50" fill="#bae6fd" stroke="#0284c7" stroke-width="2"/>
+                            <text x="100" y="105" fill="#0369a1" class="text-[10px] font-bold" text-anchor="middle">Pool (d=10m)</text>
+                            <text x="100" y="160" fill="#475569" class="text-[9px] font-bold" text-anchor="middle">Sidewalk width = 1m</text>
+                        </svg>
+                    </div>
+                `;
+            } else if (q.figure === "figure9") {
+                container.innerHTML = `
+                    <div class="w-full max-w-sm text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 9: Pool Longitudinal Partition</span>
+                        <svg viewBox="0 0 300 120" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-3">
+                            <rect x="30" y="20" width="240" height="80" fill="none" stroke="#64748b" stroke-width="2"/>
+                            <rect x="30" y="20" width="120" height="80" fill="#0284c7" fill-opacity="0.3" stroke="#0284c7" stroke-width="1.5"/>
+                            <text x="90" y="65" fill="#0369a1" class="text-[10px] font-bold" text-anchor="middle">Adult Side (1.5m)</text>
+                            <rect x="150" y="55" width="120" height="45" fill="#0284c7" fill-opacity="0.15" stroke="#0284c7" stroke-width="1.5"/>
+                            <text x="210" y="80" fill="#0369a1" class="text-[10px] font-bold" text-anchor="middle">Kids Side (0.6m)</text>
+                            <line x1="150" y1="20" x2="150" y2="100" stroke="#f43f5e" stroke-width="2" stroke-dasharray="3"/>
+                        </svg>
+                    </div>
+                `;
+            } else if (q.figure === "figure10") {
+                container.innerHTML = `
+                    <div class="w-full max-w-sm text-center">
+                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Figure 10: Circular Wheel roll test</span>
+                        <svg viewBox="0 0 350 120" class="w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-3">
+                            <line x1="20" y1="90" x2="330" y2="90" stroke="#475569" stroke-width="2"/>
+                            <circle cx="70" cy="50" r="35" fill="none" stroke="#10b981" stroke-width="3"/>
+                            <circle cx="70" cy="50" r="3" fill="#10b981"/>
+                            <line x1="70" y1="50" x2="70" y2="15" stroke="#ef4444" stroke-width="2"/>
+                            <circle cx="70" cy="15" r="4" fill="#ef4444"/> 
+                            <text x="75" y="12" fill="#ef4444" class="text-[9px] font-bold">Wheel Pin</text>
+                            <text x="140" y="45" fill="#475569" class="text-[10px] font-bold">Wheel Diameter = 60 cm</text>
+                            <text x="140" y="65" fill="#475569" class="text-[9px] font-semibold">Rolled exactly 5 turns along straight track</text>
+                        </svg>
+                    </div>
+                `;
+            } else {
+                container.classList.add("hidden");
+                return;
+            }
+            container.classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
