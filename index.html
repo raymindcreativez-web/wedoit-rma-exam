@@ -118,13 +118,25 @@
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Section</label>
                             <input id="input-student-section" type="text" placeholder="e.g., Section A, Mabini" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold text-slate-800">
                         </div>
-                        <div class="sm:col-span-2">
+                        <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Sex</label>
                             <select id="select-student-sex" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold text-slate-800">
                                 <option value="" disabled selected>Select Sex</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Date of Birth</label>
+                            <input id="input-student-birthday" type="date" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Date of Assessment</label>
+                            <input id="input-assessment-date" type="date" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 focus:outline-none text-sm font-semibold text-slate-500" readonly>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Age</label>
+                            <input id="input-student-age" type="number" placeholder="Auto-calculated" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 focus:outline-none text-sm font-semibold text-slate-500" readonly>
                         </div>
                     </div>
                 </div>
@@ -231,6 +243,15 @@
         </aside>
 
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-auto z-40">
+        <div class="max-w-7xl mx-auto px-4 py-5 flex justify-center items-center">
+            <p class="text-[11px] text-slate-500 font-bold tracking-widest uppercase">
+                &copy;2016 - 2026 wedoIT™Solutions All rights reserved
+            </p>
+        </div>
+    </footer>
 
     <!-- Formulas Floating Reference Box (Kept hidden unless explicitly toggled) -->
     <div class="max-w-2xl mx-auto hidden mt-4 mb-4" id="formulas-box-wrapper">
@@ -380,34 +401,35 @@
             { id: 44, competency: "Circles", domain: "Measurement", type: "written", question: "What is the area of the sidewalk in square meters surrounding the pool? Show your solution. [Refer to Figure 8] Use pi = 3.14.", figure: "figure8", maxScore: 3 },
             { id: 45, competency: "Circles", domain: "Measurement", type: "mc", question: "The park management decides to divide the pool into two equal parts. One part is 1.5 meters deep, while the children's part is 0.6 meters deep. Which of the following gives the total volume of water?", options: [{ value: "a", text: "10π(2.1) cubic meters" }, { value: "b", text: "25π(2.1) cubic meters" }, { value: "c", text: "10π(2.1) / 2 cubic meters" }, { value: "d", text: "25π(2.1) / 2 cubic meters" }, { value: "e", text: "100π(2.1) / 2 cubic meters" }], correctAnswer: ["d"], figure: "figure9", maxScore: 1 },
             { id: 46, competency: "Circles", domain: "Measurement", type: "written", question: "The wheel in Figure 10 has a diameter of 60 cm and is rolled exactly 5 times. Show how you can compute the distance travelled by the wheel.", figure: "figure10", maxScore: 2 },
-            { id: 47, competency: "Circles", domain: "Measurement", type: "text", question: "How many degrees did the wheel's pin rotate after 5 rolls? [Refer to Figure 10]", correctAnswer: ["1800", "1800^o", "1800degrees", "1800 degrees", "1800 deg"], figure: "figure10", maxScore: 2 }
-        ];
+        { id: 47, competency: "Circles", domain: "Measurement", type: "text", question: "How many degrees did the wheel's pin rotate after 5 rolls? [Refer to Figure 10]", correctAnswer: ["1800", "1800^o", "1800degrees", "1800 degrees", "1800 deg"], figure: "figure10", maxScore: 2 }
+    ];
 
-        // Google Sheets Integration URL directly embedded as requested
-        const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzM_uXSKgKiIkLyhSfftkXItgyuql-QHFOfqepnRPGr9rh6scdNTPppresWKg_8l8EHxw/exec";
+    // Google Sheets Integration URL directly embedded as requested
+    const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby7QRA9GIH_-0QiRvzjdVU8jgVERAMaurCIp2FfiGl6pxy9dtyY3svhthRkgZ-6NgbS0g/exec";
 
-        /* =========================================================================
-           UPDATED GOOGLE APPS SCRIPT (WITH SEX FIELD ADDED IN COLUMN D / COLUMN 4)
-           =========================================================================
+    /* =========================================================================
+       UPDATED GOOGLE APPS SCRIPT (MATCHING CSV TEMPLATE EXACTLY)
+       =========================================================================
            Run setupSheet() once inside your spreadsheet editor to recreate headers!
 
            function setupSheet() {
-             var sheet = SpreadsheetApp.openById("1xqtxTwJcdPbRFuKvrjHuZt8D8_Cqak9xEu6jrXyCPgM").getActiveSheet();
+             var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
              sheet.clear();
              
              var headers = [
-               "Timestamp", 
-               "Student Name", 
+               "TIMESTAMP", 
                "LRN", 
+               "Name of Learner", 
                "Sex", 
-               "Grade Level", 
-               "Section", 
-               "Total Score", 
-               "Percent Completed"
+               "Birthdate", 
+               "Date of Assessment", 
+               "Age"
              ];
              for (var i = 1; i <= 47; i++) {
-               headers.push("Item " + i);
+               headers.push("Q" + i);
              }
+             headers.push("Checked by", "Designation");
+             
              sheet.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight("bold").setBackground("#f1f5f9");
              sheet.setFrozenRows(1);
            }
@@ -419,16 +441,16 @@
                var nextRow = sheet.getLastRow() + 1;
                
                var rowData = [
-                 new Date(),               // Column 1 (A)
-                 data.name,                // Column 2 (B)
-                 data.lrn,                 // Column 3 (C)
-                 data.sex,                 // Column 4 (D)  <-- Sex recorded here
-                 data.grade,               // Column 5 (E)
-                 data.section,             // Column 6 (F)
-                 data.totalScore,          // Column 7 (G)
-                 data.percentCompleted     // Column 8 (H)
+                 new Date(),               // Column 1 (A) - TIMESTAMP
+                 data.lrn,                 // Column 2 (B) - LRN
+                 data.name,                // Column 3 (C) - Name of Learner
+                 data.sex,                 // Column 4 (D) - Sex
+                 data.birthday,            // Column 5 (E) - Birthdate
+                 data.assessmentDate,      // Column 6 (F) - Date of Assessment
+                 data.age                  // Column 7 (G) - Age
                ];
 
+               // Columns 8 to 54 (H to BB) - Q1 to Q47 Answers
                for (var i = 1; i <= 47; i++) {
                  var answer = data.rawResponses[i];
                  if (answer === undefined || answer === null) {
@@ -439,6 +461,11 @@
                    rowData.push(answer);
                  }
                }
+
+               // Columns 55 and 56 (BC and BD) - Checked by, Designation
+               rowData.push(""); // Left blank for evaluator to fill
+               rowData.push(""); // Left blank for evaluator to fill
+
                sheet.getRange(nextRow, 1, 1, rowData.length).setValues([rowData]);
                return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
              } catch (err) {
@@ -452,7 +479,7 @@
         let studentAnswers = {};
         let testStartTime = null;
         let timerInterval = null;
-        let candidateInfo = { name: "Guest Student", lrn: "", grade: "", section: "", sex: "" };
+        let candidateInfo = { name: "Guest Student", lrn: "", grade: "", section: "", sex: "", birthday: "", age: "", assessmentDate: "" };
 
         // DOM elements
         const screenWelcome = document.getElementById("screen-welcome");
@@ -483,6 +510,9 @@
         const selectStudentGrade = document.getElementById("select-student-grade");
         const inputStudentSection = document.getElementById("input-student-section");
         const selectStudentSex = document.getElementById("select-student-sex");
+        const inputStudentBirthday = document.getElementById("input-student-birthday");
+        const inputAssessmentDate = document.getElementById("input-assessment-date");
+        const inputStudentAge = document.getElementById("input-student-age");
 
         const sidebarStudentName = document.getElementById("sidebar-student-name");
         const sidebarStudentLrn = document.getElementById("sidebar-student-lrn");
@@ -509,7 +539,30 @@
         window.onload = function() {
             renderQuickNav();
             loadProgress();
+            
+            // Auto-populate Date of Assessment
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            inputAssessmentDate.value = `${yyyy}-${mm}-${dd}`;
         };
+
+        // Auto-calculate Age when Birthday changes
+        inputStudentBirthday.addEventListener("change", function() {
+            if (!this.value) {
+                inputStudentAge.value = "";
+                return;
+            }
+            const dob = new Date(this.value);
+            const assessment = new Date(inputAssessmentDate.value);
+            let age = assessment.getFullYear() - dob.getFullYear();
+            const m = assessment.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && assessment.getDate() < dob.getDate())) {
+                age--;
+            }
+            inputStudentAge.value = age >= 0 ? age : 0;
+        });
 
         function showModal({ title, text, confirmText, cancelText, successCallback, type="confirm" }) {
             modalTitle.innerText = title;
@@ -557,6 +610,9 @@
             const grade = selectStudentGrade.value;
             const section = inputStudentSection.value.trim();
             const sex = selectStudentSex.value;
+            const birthday = inputStudentBirthday.value;
+            const assessmentDate = inputAssessmentDate.value;
+            const age = inputStudentAge.value;
             
             if (!name) {
                 showModal({ title: "Missing Information", text: "Please enter your full name to proceed with the assessment.", type: "alert" });
@@ -574,16 +630,23 @@
                 showModal({ title: "Missing Information", text: "Please select your Sex to proceed with the assessment.", type: "alert" });
                 return;
             }
+            if (!birthday) {
+                showModal({ title: "Missing Information", text: "Please enter your Date of Birth to proceed with the assessment.", type: "alert" });
+                return;
+            }
 
             candidateInfo.name = name;
             candidateInfo.lrn = lrn || "N/A";
             candidateInfo.grade = grade;
             candidateInfo.section = section;
             candidateInfo.sex = sex;
+            candidateInfo.birthday = birthday;
+            candidateInfo.age = age;
+            candidateInfo.assessmentDate = assessmentDate;
 
             sidebarStudentName.innerText = candidateInfo.name;
             sidebarStudentLrn.innerText = `LRN: ${candidateInfo.lrn}`;
-            sidebarStudentMeta.innerText = `${candidateInfo.grade} - ${candidateInfo.section} (${candidateInfo.sex})`;
+            sidebarStudentMeta.innerText = `${candidateInfo.grade} - ${candidateInfo.section} (${candidateInfo.sex}, Age: ${candidateInfo.age})`;
 
             screenRegistration.classList.add("hidden");
             screenAssessment.classList.remove("hidden");
@@ -609,6 +672,8 @@
             selectStudentGrade.selectedIndex = 0;
             inputStudentSection.value = "";
             selectStudentSex.selectedIndex = 0;
+            inputStudentBirthday.value = "";
+            inputStudentAge.value = "";
 
             // Update UI sidebar back to default state
             sidebarStudentName.innerText = "Guest Student";
@@ -963,35 +1028,14 @@
                 return;
             }
 
-            let totalScore = 0;
-            const competencyBreakdown = {
-                "Number Expressions": 0,
-                "Data": 0,
-                "Coordinates": 0,
-                "Variables & Equations": 0,
-                "Triangles": 0,
-                "Circles": 0
-            };
-
-            RMA_QUESTIONS.forEach(q => {
-                const pts = computeItemScore(q);
-                totalScore += pts;
-                competencyBreakdown[q.competency] += pts;
-            });
-
-            const answeredCount = Object.keys(studentAnswers).length;
-            const completionPct = `${Math.round((answeredCount / 47) * 100)}%`;
-
             const payload = {
                 name: candidateInfo.name,
                 lrn: candidateInfo.lrn,
-                sex: candidateInfo.sex,  // <-- Added student sex mapping
-                grade: candidateInfo.grade,
-                section: candidateInfo.section,
-                totalScore: `${totalScore} / 72`,
-                percentCompleted: completionPct,
-                competencyBreakdown: competencyBreakdown,
-                rawResponses: studentAnswers // Sent to be parsed column-by-column by Google Apps Script
+                sex: candidateInfo.sex,  
+                birthday: candidateInfo.birthday,
+                age: candidateInfo.age,
+                assessmentDate: candidateInfo.assessmentDate,
+                rawResponses: studentAnswers 
             };
 
             try {
