@@ -405,41 +405,35 @@
     ];
 
     // Google Sheets Integration URL directly embedded as requested
-    const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby7QRA9GIH_-0QiRvzjdVU8jgVERAMaurCIp2FfiGl6pxy9dtyY3svhthRkgZ-6NgbS0g/exec";
+    const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUckyn__96RZU5BpberQDpIqJAjFHreCMaIJ5Hj7fQH5kE4LJCeyQ7cBYptyYwezPSNA/exec";
 
     /* =========================================================================
-       UPDATED GOOGLE APPS SCRIPT (MATCHING CSV TEMPLATE EXACTLY)
+       UPDATED GOOGLE APPS SCRIPT (AUTO-CREATES HEADERS ON 1ST RUN)
        =========================================================================
-           Run setupSheet() once inside your spreadsheet editor to recreate headers!
-
-           function setupSheet() {
-             var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-             sheet.clear();
-             
-             var headers = [
-               "TIMESTAMP", 
-               "LRN", 
-               "Name of Learner", 
-               "Sex", 
-               "Birthdate", 
-               "Date of Assessment", 
-               "Age"
-             ];
-             for (var i = 1; i <= 47; i++) {
-               headers.push("Q" + i);
-             }
-             headers.push("Checked by", "Designation");
-             
-             sheet.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight("bold").setBackground("#f1f5f9");
-             sheet.setFrozenRows(1);
-           }
+       Replace your current Google Apps Script code with this new version:
 
            function doPost(e) {
              try {
                var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-               var data = JSON.parse(e.postData.contents);
-               var nextRow = sheet.getLastRow() + 1;
                
+               // --- 1. Check & Create Headers if First Submission ---
+               if (sheet.getLastRow() === 0) {
+                 var headers = [
+                   "TIMESTAMP", "LRN", "Name of Learner", "Sex", "Birthdate", 
+                   "Date of Assessment", "Age"
+                 ];
+                 for (var i = 1; i <= 47; i++) {
+                   headers.push("Q" + i);
+                 }
+                 headers.push("Checked by", "Designation");
+                 
+                 sheet.appendRow(headers);
+                 sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#f1f5f9");
+                 sheet.setFrozenRows(1);
+               }
+
+               // --- 2. Process Submission Data ---
+               var data = JSON.parse(e.postData.contents);
                var rowData = [
                  new Date(),               // Column 1 (A) - TIMESTAMP
                  data.lrn,                 // Column 2 (B) - LRN
@@ -466,7 +460,8 @@
                rowData.push(""); // Left blank for evaluator to fill
                rowData.push(""); // Left blank for evaluator to fill
 
-               sheet.getRange(nextRow, 1, 1, rowData.length).setValues([rowData]);
+               sheet.appendRow(rowData);
+               
                return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
              } catch (err) {
                return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
@@ -957,6 +952,26 @@
                 renderQuestion(currentQuestionIdx + 1);
             } else {
                 checkCompletionAndSubmit();
+            }
+        });
+
+        // Keyboard Shortcuts for Navigation (Ctrl + Left/Right Arrow)
+        document.addEventListener("keydown", (e) => {
+            // Only allow navigation if the assessment screen is currently active
+            if (screenAssessment.classList.contains("hidden") || modalContainer.classList.contains("flex")) return;
+
+            if (e.ctrlKey && e.key === "ArrowRight") {
+                e.preventDefault(); // Prevent default browser behavior
+                if (currentQuestionIdx < RMA_QUESTIONS.length - 1) {
+                    renderQuestion(currentQuestionIdx + 1);
+                } else {
+                    checkCompletionAndSubmit();
+                }
+            } else if (e.ctrlKey && e.key === "ArrowLeft") {
+                e.preventDefault(); // Prevent default browser behavior
+                if (currentQuestionIdx > 0) {
+                    renderQuestion(currentQuestionIdx - 1);
+                }
             }
         });
 
